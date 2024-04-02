@@ -115,44 +115,104 @@ void exibirElementos()
 	}
 }
 
-void inserirElemento()
-{
-	// aloca memoria dinamicamente para o novo elemento
-	NO* novo = (NO*)malloc(sizeof(NO));
-	if (novo == NULL)
-	{
-		return;
-	}
+void inserirElemento() {
+    int elemento;
+    cout << "Digite o elemento que deseja inserir: ";
+    cin >> elemento;
 
-	cout << "Digite o elemento: ";
-	cin >> novo->valor;
-	novo->prox = NULL;
+    // Verifica se o elemento já existe na lista
+    if (posicaoElemento(elemento) != NULL) {
+        cout << "O elemento já está na lista. \n";
+        cout << endl;
+        return;
+    }
 
-	if (primeiro == NULL)
-	{
-		primeiro = novo;
-	}
-	else
-	{
-		// procura o final da lista
-		NO* aux = primeiro;
-		while (aux->prox != NULL) {
-			aux = aux->prox;
-		}
-		aux->prox = novo;
-	}
+    // separa um espaco na memória para o novo nó
+    NO* novo = (NO*)malloc(sizeof(NO));
+    if (novo == NULL) {
+        cout << "Erro ao alocar memória.\n";
+        return;
+    }
+
+    // aqui o programa preenche os dados do novo nó
+    novo->valor = elemento;
+    novo->prox = NULL;
+
+    // verificar se a lista está vazia
+    if (primeiro == NULL) {
+        primeiro = novo;
+    } else {
+        // encontrar o último nó e adicionar o novo nó após ele
+        NO* aux = primeiro;
+        while (aux->prox != NULL) {
+            aux = aux->prox;
+        }
+        aux->prox = novo;
+    }
 }
 
-void excluirElemento()
-{
-	
+
+void excluirElemento() {
+    int excluirNumero;
+    bool deletarNumero = false; //a variavel comeca com o valor falso
+
+    //solicita ao usuário que digite o número do elemento a ser excluido
+    cout << "Digite o elemento a ser excluído: ";
+    cin >> excluirNumero;
+
+    //verifica se a lista está vazia. Se estiver, exibe uma mensagem e retorna.
+    if (primeiro == NULL) {
+        cout << "A lista está vazia.\n";
+        return;
+    }
+    //Inicializa dois ponteiros para nos (atual e anterior) para percorrer a lista. O ponteiro atual começa no primeiro no da lista.
+    NO* atual = primeiro;
+    NO* anterior = NULL;
+
+    //percorremos a lista até encontrar o elemento a ser excluido ou ate o final da lista
+    while (atual != NULL) {
+        if (atual->valor == excluirNumero) {
+            if (anterior == NULL) { // Se o elemento a ser excluído é o primeiro da lista
+                primeiro = atual->prox;
+            } else {
+                anterior->prox = atual->prox;
+            }
+            free(atual); //Aqui o no esta sendo excluido usando a funcao free
+            cout << "Elemento excluído com sucesso. \n";
+            deletarNumero = true;
+            break;
+        }
+        anterior = atual;
+        atual = atual->prox;
+    }
+
+    //Se o deletarNumero for verdadeiro entao mostra essa mensagem
+    if (!deletarNumero) {
+        cout << "Elemento não encontrado.\n";
+    }
 }
 
-void buscarElemento()
-{
-	
-}
 
+void buscarElemento() {
+    int buscarNum;
+
+    if (primeiro != NULL) {
+        cout << "Digite o elemento que está procurando: ";
+        cin >> buscarNum;
+
+        NO* posicao = posicaoElemento(buscarNum); // Localiza o elemento
+
+        if (posicao != NULL) {
+            cout << "Elemento Encontrado\n";
+            cout << "A posição que ele se encontra atualmente é: ";
+            cout << posicao << endl;
+        } else {
+            cout << "Elemento não encontrado. \n";
+        }
+    } else {
+        cout << "A lista está vazia. \n";
+    }
+}
 
 
 // retorna um ponteiro para o elemento buscado
